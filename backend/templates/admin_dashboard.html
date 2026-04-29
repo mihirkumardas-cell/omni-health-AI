@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="hero-section content-hero p-5 mb-5">
+    <div class="row align-items-center">
+        <div class="col-lg-8">
+            <span class="eyebrow">Admin overview</span>
+            <h1 class="page-title mb-3">Admin dashboard</h1>
+            <p class="page-subtitle">Monitor hospitals, users, and feedback in a control panel that now matches the app's updated visual system.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+            <a href="{{ url_for('admin_hospitals') }}" class="btn btn-light btn-lg shadow-sm">Open hospital manager</a>
+        </div>
+    </div>
+    <div class="hero-metrics">
+        <a href="{{ url_for('admin_hospitals') }}" class="hero-metric hero-metric-link">
+            <strong>{{ hospitals }}</strong>
+            <span>Hospital records</span>
+        </a>
+        <a href="{{ url_for('admin_users') }}" class="hero-metric hero-metric-link">
+            <strong>{{ users }}</strong>
+            <span>Registered users</span>
+        </a>
+        <a href="{{ url_for('admin_feedback') }}" class="hero-metric hero-metric-link">
+            <strong>{{ feedbacks }}</strong>
+            <span>Feedback entries</span>
+        </a>
+    </div>
+</div>
+<div class="row gy-4 dashboard-grid">
+    <div class="col-md-4">
+        <a href="{{ url_for('admin_hospitals') }}" class="card feature-card metric-card text-center p-4 d-block text-decoration-none">
+            <h5 class="mb-3">Hospitals</h5>
+            <p class="metric-value mb-0">{{ hospitals }}</p>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ url_for('admin_users') }}" class="card feature-card metric-card text-center p-4 d-block text-decoration-none">
+            <h5 class="mb-3">Registered Users</h5>
+            <p class="metric-value mb-0">{{ users }}</p>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ url_for('admin_feedback') }}" class="card feature-card metric-card text-center p-4 d-block text-decoration-none">
+            <h5 class="mb-3">Feedback Entries</h5>
+            <p class="metric-value mb-0">{{ feedbacks }}</p>
+        </a>
+    </div>
+</div>
+<div class="mt-4">
+    <h4 class="section-heading mb-3">Quick Actions</h4>
+    <div class="list-group shadow-sm rounded overflow-hidden">
+        <a href="{{ url_for('admin_hospitals') }}" class="list-group-item list-group-item-action">Manage Hospitals</a>
+        <a href="{{ url_for('admin_users') }}" class="list-group-item list-group-item-action">View Users</a>
+        <a href="{{ url_for('admin_feedback') }}" class="list-group-item list-group-item-action">View Feedback</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="hero-section content-hero p-4 mb-4">
+    <span class="eyebrow">Care network</span>
+    <h3 class="page-title mb-2">Available Hospitals</h3>
+    <p class="page-subtitle mb-0">Browse the hospitals currently available in the recommendation network.</p>
+</div>
+<div class="row g-4">
+    {% for hospital in hospitals %}
+        <div class="col-md-6">
+            <div class="card feature-card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <div class="feature-icon">H</div>
+                    <h5 class="card-title">{{ hospital.name }}</h5>
+                    <p class="text-muted small">Specialty: {{ hospital.specialty }}</p>
+                    <p>{{ hospital.address }}</p>
+                    <p><strong>Phone:</strong> {{ hospital.phone }}</p>
+                    <p>{{ hospital.description }}</p>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-info mb-0">
+                No hospitals are available right now. Please check back later.
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

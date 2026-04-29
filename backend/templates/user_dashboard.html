@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="hero-section content-hero p-5 mb-5">
+    <div class="row align-items-center">
+        <div class="col-lg-8">
+            <span class="eyebrow">Patient dashboard</span>
+            <h1 class="page-title mb-3">Welcome back, {{ name }}</h1>
+            <p class="page-subtitle">Launch predictions, compare recommended hospitals, and talk to the health assistant from a more modern dashboard.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+            <a href="{{ url_for('user_predict') }}?disease=heart" class="btn btn-light btn-lg shadow-sm">Start prediction</a>
+        </div>
+    </div>
+    <div class="hero-metrics">
+        <div class="hero-metric">
+            <strong>Fast</strong>
+            <span>Symptom triage</span>
+        </div>
+        <div class="hero-metric">
+            <strong>Ranked</strong>
+            <span>Hospital recommendations</span>
+        </div>
+        <a href="{{ url_for('user_symptoms') }}" class="hero-metric hero-metric-link">
+            <strong>Saved</strong>
+            <span>Recent history</span>
+        </a>
+    </div>
+</div>
+<div class="row gy-4 mb-4 dashboard-grid">
+    <div class="col-12">
+        <div class="card shadow-sm border-0 p-4 input-card">
+            <h4>Quick Symptom Checker</h4>
+            <p class="text-muted">Type your symptoms below and receive an instant likely condition prediction with care guidance.</p>
+            <form method="POST" action="{{ url_for('user_symptoms') }}">
+                <div class="input-shell mb-3">
+                    <label class="form-label">Describe symptoms</label>
+                    <textarea class="form-control modern-textarea" name="symptoms" rows="4" placeholder="e.g. chest pain, shortness of breath, fatigue" required></textarea>
+                </div>
+                <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <button class="btn btn-primary">Predict from Symptoms</button>
+                    <a href="{{ url_for('user_symptoms') }}" class="btn btn-secondary">Symptoms</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% if history %}
+    <div class="col-12">
+        <div class="card shadow-sm border-0 p-4">
+            <h4>Recent Symptom Checks</h4>
+            <p class="text-muted mb-3">Review your latest entries and health advice from previous symptom analyses.</p>
+            <div class="list-group">
+                {% for entry in history %}
+                <div class="list-group-item mb-2 rounded-3">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <strong>{{ entry.diagnosis or 'Unclear' }}</strong>
+                            <p class="mb-1 text-muted small">{{ entry.symptoms }}</p>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">{{ entry.created_at.strftime('%b %d, %Y') }}</span>
+                    </div>
+                    <p class="mb-0"><strong>Confidence:</strong> {{ entry.confidence or 0 }}%</p>
+                </div>
+                {% endfor %}
+            </div>
+            <a href="{{ url_for('user_symptoms') }}" class="btn btn-outline-primary mt-3">View symptom history</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+<div class="row gy-4 dashboard-grid">
+    <div class="col-md-6 col-xl-4">
+        <a href="{{ url_for('user_predict') }}?disease=heart" class="card feature-card feature-card-link h-100 p-4 d-block text-decoration-none">
+            <div class="feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="url(#heartGrad)"/>
+                    <defs>
+                        <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ff0080" />
+                            <stop offset="100%" stop-color="#7928ca" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <h5>Heart Disease Risk</h5>
+            <p>Use ML-driven analysis to assess your heart disease risk and find specialist care.</p>
+            <span class="btn btn-primary mt-3">Check Heart</span>
+        </a>
+    </div>
+    <div class="col-md-6 col-xl-4">
+        <a href="{{ url_for('user_predict') }}?disease=liver" class="card feature-card feature-card-link h-100 p-4 d-block text-decoration-none">
+            <div class="feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z" fill="url(#liverGrad)"/>
+                    <defs>
+                        <linearGradient id="liverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#0070f3" />
+                            <stop offset="100%" stop-color="#00dfd8" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <h5>Liver Disease Risk</h5>
+            <p>Predict liver health with a trusted KNN algorithm and view relevant support centers.</p>
+            <span class="btn btn-primary mt-3">Check Liver</span>
+        </a>
+    </div>
+    <div class="col-md-6 col-xl-4">
+        <a href="{{ url_for('user_predict') }}?disease=diabetes" class="card feature-card feature-card-link h-100 p-4 d-block text-decoration-none">
+            <div class="feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" fill="url(#diabetesGrad)"/>
+                    <path d="M12 8V16M8 12H16" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <defs>
+                        <linearGradient id="diabetesGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#f97316" />
+                            <stop offset="100%" stop-color="#ff0080" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <h5>Diabetes Risk</h5>
+            <p>Powered by XGBoost, evaluate diabetes risk quickly with high-quality data.</p>
+            <span class="btn btn-primary mt-3">Check Diabetes</span>
+        </a>
+    </div>
+    <div class="col-12">
+        <div class="card feature-card feature-card-accent h-100 p-4">
+            <div class="feature-icon feature-icon-bot" aria-hidden="true">
+                <svg viewBox="0 0 64 64" class="feature-icon-svg" role="img">
+                    <defs>
+                        <linearGradient id="dashBotGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#38bdf8" />
+                            <stop offset="100%" stop-color="#0ea5a2" />
+                        </linearGradient>
+                    </defs>
+                    <rect x="10" y="14" width="44" height="34" rx="14" fill="url(#dashBotGradient)" />
+                    <circle cx="24" cy="31" r="4" fill="#07111f" />
+                    <circle cx="40" cy="31" r="4" fill="#07111f" />
+                    <path d="M24 41c3 3 13 3 16 0" fill="none" stroke="#07111f" stroke-width="3" stroke-linecap="round" />
+                    <path d="M32 8v8" fill="none" stroke="#38bdf8" stroke-width="4" stroke-linecap="round" />
+                    <circle cx="32" cy="7" r="4" fill="#f97316" />
+                </svg>
+            </div>
+            <h5>Health Assistant Chatbot</h5>
+            <p>Talk to the symptom assistant about what you feel, and it will recommend what to do and what to avoid next.</p>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{{ url_for('user_symptoms') }}" class="btn btn-outline-primary">Symptoms</a>
+                <a href="{{ url_for('user_chatbot') }}" class="btn btn-primary">Open Chatbot</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-4">
+        <a href="{{ url_for('user_hospitals') }}" class="card feature-card feature-card-link h-100 p-4 d-block text-decoration-none">
+            <div class="feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 3H5C3.89 3 3 3.9 3 5V19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM18 13H13V18H11V13H6V11H11V6H13V11H18V13Z" fill="url(#hospGrad)"/>
+                    <defs>
+                        <linearGradient id="hospGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#00d2ff" />
+                            <stop offset="100%" stop-color="#3a7bd5" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <h5>Hospital Finder</h5>
+            <p>Browse hospitals by specialty and location to get matched quickly.</p>
+            <span class="btn btn-secondary mt-3">View Hospitals</span>
+        </a>
+    </div>
+</div>
+{% endblock %}

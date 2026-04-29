@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0 input-card">
+            <div class="card-body">
+                <div class="chatbot-header mb-4">
+                    <div class="chatbot-avatar" aria-hidden="true">
+                        <svg viewBox="0 0 64 64" class="chatbot-avatar-svg" role="img">
+                            <defs>
+                                <linearGradient id="botg" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#38bdf8" />
+                                    <stop offset="100%" stop-color="#0ea5a2" />
+                                </linearGradient>
+                            </defs>
+                            <rect x="10" y="14" width="44" height="34" rx="14" fill="url(#botg)" />
+                            <circle cx="24" cy="31" r="4" fill="#07111f" />
+                            <circle cx="40" cy="31" r="4" fill="#07111f" />
+                            <path d="M24 41c3 3 13 3 16 0" fill="none" stroke="#07111f" stroke-width="3" stroke-linecap="round" />
+                            <path d="M32 8v8" fill="none" stroke="#38bdf8" stroke-width="4" stroke-linecap="round" />
+                            <circle cx="32" cy="7" r="4" fill="#f97316" />
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="soft-badge mb-2">Assistant</span>
+                        <h3 class="mb-1">Health Chatbot</h3>
+                        <p class="text-muted mb-0">Ask about symptoms or a disease, and the bot will reply with only the guidance you need.</p>
+                    </div>
+                </div>
+                <form method="POST" action="{{ url_for('user_chatbot') }}">
+                    <div class="input-shell mb-3">
+                        <label class="form-label">Ask the assistant</label>
+                        <textarea class="form-control modern-textarea" id="chatPromptInput" name="prompt" rows="4" placeholder="Example: I have chest pain and shortness of breath" required></textarea>
+                        <div class="form-text" id="voiceStatus">You can type or use the microphone to describe symptoms.</div>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button class="btn btn-primary">Get Answer</button>
+                        <button type="button" class="btn btn-secondary" id="clearPromptBtn">Clear Symptoms</button>
+                        <button type="button" class="btn btn-secondary" id="voiceInputBtn">Speak Symptoms</button>
+                        <button type="button" class="btn btn-secondary" id="speakResponseBtn" {% if not answer %}disabled{% endif %}>Speak Answer</button>
+                        <button type="button" class="btn btn-outline-primary" id="stopSpeakBtn" {% if not answer %}disabled{% endif %}>Stop Speaking</button>
+                    </div>
+                </form>
+                {% if answer %}
+                    <div class="alert alert-info mt-4 chatbot-response" id="chatbotResponse" data-voice-text="{{ answer|replace('\n', '. ') }}">
+                        <h5 class="mb-3">Health Assistant Response</h5>
+                        {{ answer }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    (() => {
+        const promptInput = document.getElementById("chatPromptInput");
+        const clearPromptBtn = document.getElementById("clearPromptBtn");
+        const voiceInputBtn = document.getElementById("voiceInputBtn");
+        const voiceStatus = document.getElementById("voiceStatus");
+        const speakBtn = document.getElementById("speakResponseBtn");
+        const stopBtn = document.getElementById("stopSpeakBtn");
+        const responseBox = document.getElementById("chatbotResponse");
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (voiceInputBtn) {
+            if (!SpeechRecognition || !promptInput) {
+                voiceInputBtn.disabled = true;
+                if (voiceStatus) {
+                    voiceStatus.textContent = "Voice input is available in supported browsers like Chrome and Edge.";
+                }
+            } else {
+                const recognition = new SpeechRecognition();
+                recognition.lang = "en-IN";
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
+
+                voiceInputBtn.addEventListener("click", () => {
+                    recognition.start();
+                    voiceInputBtn.disabled = true;
+                    if (voiceStatus) {
+                        voiceStatus.textContent = "Listening... speak your symptoms now.";
+                    }
+                });
+
+                recognition.addEventListener("result", (event) => {
+                    const transcript = event.results[0][0].transcript.trim();
+                    if (transcript) {
+                        promptInput.value = transcript;
+                    }
+                    if (voiceStatus) {
+                        voiceStatus.textContent = "Voice input captured. You can edit it before sending.";
+                    }
+                });
+
+                recognition.addEventListener("speechend", () => {
+                    recognition.stop();
+                });
+
+                recognition.addEventListener("end", () => {
+                    voiceInputBtn.disabled = false;
+                });
+
+                recognition.addEventListener("error", () => {
+                    voiceInputBtn.disabled = false;
+                    if (voiceStatus) {
+                        voiceStatus.textContent = "Voice input could not start. Please try again or type manually.";
+                    }
+                });
+            }
+        }
+
+        if (clearPromptBtn && promptInput) {
+            clearPromptBtn.addEventListener("click", () => {
+                promptInput.value = "";
+                promptInput.focus();
+                if (voiceStatus) {
+                    voiceStatus.textContent = "Symptoms cleared. You can type or use the microphone again.";
+                }
+            });
+        }
+
+        if (!speakBtn || !responseBox) return;
+
+        const speakText = () => {
+            const text = responseBox.dataset.voiceText || responseBox.innerText.trim();
+            if (!text || !("speechSynthesis" in window)) {
+                return;
+            }
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.96;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            window.speechSynthesis.speak(utterance);
+        };
+
+        speakBtn.addEventListener("click", speakText);
+        if (stopBtn) {
+            stopBtn.addEventListener("click", () => {
+                if ("speechSynthesis" in window) {
+                    window.speechSynthesis.cancel();
+                }
+            });
+        }
+    })();
+</script>
+{% endblock %}

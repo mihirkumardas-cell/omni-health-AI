@@ -1,0 +1,10 @@
+# Start the Flask app and display ngrok instructions.
+Write-Host "1. Make sure you have Python and ngrok installed."
+Write-Host "2. Start this command from the backend folder:"
+Write-Host "   python app.py"
+Write-Host "3. In another terminal, run:"
+Write-Host "   ngrok http 5000"
+Write-Host "4. Share the generated https URL with your friend."
+Write-Host "" 
+Write-Host "If ngrok is not installed, download it from https://ngrok.com/download and unzip it." 
+Write-Host "Then add the ngrok executable to your PATH or run it from its folder."

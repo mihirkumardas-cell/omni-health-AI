@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row align-items-center login-hero gy-4">
+    <div class="col-lg-6">
+        <div class="hero-section p-5">
+            <span class="eyebrow">Adaptive care intelligence</span>
+            <h1 class="page-title mb-3">Healthcare guidance that feels fast, clear, and modern.</h1>
+            <p class="page-subtitle mb-4">Log in to access disease risk checks, symptom support, and location-aware hospital recommendations in one refined workspace.</p>
+            <div class="d-flex gap-3">
+                <a href="{{ url_for('register') }}" class="btn btn-secondary btn-lg">Create account</a>
+                <a href="{{ url_for('admin_login') }}" class="btn btn-primary btn-lg">Admin login</a>
+            </div>
+            <div class="hero-metrics">
+                <div class="hero-metric">
+                    <strong>3</strong>
+                    <span>Prediction tracks</span>
+                </div>
+                <div class="hero-metric">
+                    <strong>Smart</strong>
+                    <span>Hospital matching</span>
+                </div>
+                <div class="hero-metric">
+                    <strong>1</strong>
+                    <span>Unified health dashboard</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="row gy-4">
+            <div class="col-lg-6">
+                <div class="card-soft auth-panel p-5 shadow-sm">
+                    <h3 class="mb-4">User Login</h3>
+                    <form method="POST" action="{{ url_for('login') }}">
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control form-control-lg" name="email" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control form-control-lg" name="password" required />
+                        </div>
+                        <button class="btn btn-primary w-100 btn-lg">Sign In</button>
+                    </form>
+                    <p class="footer-note mt-4 mb-0 text-center">Secure authentication for patients and health admins.</p>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card-soft auth-panel p-5 shadow-sm">
+                    <h3 class="mb-4">New User? Register</h3>
+                    <form method="POST" action="{{ url_for('register') }}">
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control form-control-lg" name="name" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control form-control-lg" name="email" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control form-control-lg" name="password" required />
+                        </div>
+                        <button class="btn btn-secondary w-100 btn-lg">Create Account</button>
+                    </form>
+                    <p class="footer-note mt-4 mb-0 text-center">Already registered? Use the login form to access your dashboard.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

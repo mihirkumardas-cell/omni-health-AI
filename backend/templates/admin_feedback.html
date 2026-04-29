@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="mb-4">
+    <span class="soft-badge mb-3">Experience notes</span>
+    <h3>User Feedback</h3>
+    <p class="text-muted">Users can submit comments and experience reports here.</p>
+</div>
+<div class="row g-3">
+    {% for item in feedbacks %}
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.user_name }} <small class="text-muted">({{ item.email }})</small></h5>
+                    <p class="card-text">{{ item.message }}</p>
+                    <p class="text-muted small">Submitted {{ item.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

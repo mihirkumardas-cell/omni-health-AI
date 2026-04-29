@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row align-items-center register-hero gy-4">
+    <div class="col-lg-6">
+        <div class="hero-section p-5">
+            <span class="eyebrow">Patient onboarding</span>
+            <h1 class="page-title mb-3">Join OmniHealth AI and move from uncertainty to direction.</h1>
+            <p class="page-subtitle mb-4">Create an account for predictions, symptom insights, and a cleaner path to nearby care.</p>
+            <div class="hero-metrics">
+                <div class="hero-metric">
+                    <strong>Personal</strong>
+                    <span>Risk analysis</span>
+                </div>
+                <div class="hero-metric">
+                    <strong>Nearby</strong>
+                    <span>Hospital guidance</span>
+                </div>
+                <div class="hero-metric">
+                    <strong>Secure</strong>
+                    <span>Saved history</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5 offset-lg-1">
+        <div class="card-soft auth-panel p-5 shadow-sm">
+            <h3 class="mb-4">Create Account</h3>
+            <form method="POST" action="{{ url_for('register') }}">
+                <div class="mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control form-control-lg" name="name" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control form-control-lg" name="email" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control form-control-lg" name="password" required />
+                </div>
+                <button class="btn btn-primary w-100 btn-lg">Register</button>
+            </form>
+            <p class="footer-note mt-4 mb-0 text-center">Already signed up? <a href="{{ url_for('login') }}">Login now</a>.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

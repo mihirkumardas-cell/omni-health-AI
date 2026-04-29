@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <span class="soft-badge mb-3">Advanced model</span>
+                <h3>RNN Sequence Prediction</h3>
+                <p class="text-muted">Enter 5 numeric features to evaluate an RNN-based risk score.</p>
+                <form method="POST" action="{{ url_for('user_rnn') }}">
+                    <div class="row g-3">
+                        {% for i in range(1, 6) %}
+                        <div class="col-md-4">
+                            <label class="form-label">Feature {{ i }}</label>
+                            <input class="form-control" name="seq{{ i }}" required />
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-4"><button class="btn btn-primary">Run RNN</button></div>
+                </form>
+            </div>
+        </div>
+        {% if result %}
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <span class="soft-badge mb-3">Result</span>
+                <h4>RNN Result</h4>
+                <p><strong>Prediction:</strong> {{ result.prediction }}</p>
+                <p><strong>Risk score:</strong> {{ result.score }}%</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

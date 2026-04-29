@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="mb-4">
+    <span class="soft-badge mb-3">User base</span>
+    <h3>Registered Users</h3>
+    <p class="text-muted">Review all users who signed up for the platform.</p>
+</div>
+<div class="table-responsive shadow-sm rounded">
+    <table class="table table-striped mb-0">
+        <thead class="table-light"><tr><th>Name</th><th>Email</th><th>Registered At</th></tr></thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.registered_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

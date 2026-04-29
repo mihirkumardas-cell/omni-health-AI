@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="hero-section content-hero p-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <span class="eyebrow">Hospital operations</span>
+            <h3 class="page-title mb-2">Hospital Management</h3>
+            <p class="page-subtitle mb-0">Add, edit, and tune recommendation data for hospital listings.</p>
+        </div>
+        <button class="btn btn-light" data-bs-toggle="collapse" data-bs-target="#addHospital">Add Hospital</button>
+    </div>
+</div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <span class="soft-badge">Directory editor</span>
+    </div>
+</div>
+<div class="collapse mb-4" id="addHospital">
+    <div class="card card-body shadow-sm border-0">
+        <form method="POST" action="{{ url_for('admin_add_hospital') }}">
+            <div class="row g-3">
+                <div class="col-md-6"><input class="form-control" name="name" placeholder="Hospital Name" required /></div>
+                <div class="col-md-6"><input class="form-control" name="address" placeholder="Address" required /></div>
+                <div class="col-md-3"><select class="form-select" name="specialty" required><option value="Heart">Heart</option><option value="Liver">Liver</option><option value="Diabetes">Diabetes</option><option value="General">General</option><option value="General, Heart">General, Heart</option><option value="General, Liver">General, Liver</option><option value="General, Diabetes">General, Diabetes</option></select></div>
+                <div class="col-md-3"><input class="form-control" name="phone" placeholder="Phone" required /></div>
+                <div class="col-md-3"><input class="form-control" name="city" placeholder="City" /></div>
+                <div class="col-md-3"><input class="form-control" name="locality" placeholder="Locality" /></div>
+                <div class="col-md-4"><input class="form-control" name="heart_score" type="number" min="0" max="100" value="60" placeholder="Heart score" /></div>
+                <div class="col-md-4"><input class="form-control" name="liver_score" type="number" min="0" max="100" value="60" placeholder="Liver score" /></div>
+                <div class="col-md-4"><input class="form-control" name="diabetes_score" type="number" min="0" max="100" value="60" placeholder="Diabetes score" /></div>
+                <div class="col-12"><input class="form-control" name="description" placeholder="Short description" /></div>
+            </div>
+            <div class="mt-3"><button class="btn btn-primary">Save Hospital</button></div>
+        </form>
+    </div>
+</div>
+<div class="table-responsive shadow-sm rounded">
+    <table class="table table-hover mb-0">
+        <thead class="table-light"><tr><th>Name</th><th>Specialty</th><th>Address</th><th>Scores</th><th>Phone</th><th>Actions</th></tr></thead>
+        <tbody>
+            {% for hospital in hospitals %}
+            <tr>
+                <td>{{ hospital.name }}</td>
+                <td>{{ hospital.specialty }}</td>
+                <td>{{ hospital.address }}<br /><span class="text-muted small">{{ hospital.locality or 'Unknown area' }}, {{ hospital.city or 'Unknown city' }}</span></td>
+                <td class="small">H {{ hospital.heart_score }} | L {{ hospital.liver_score }} | D {{ hospital.diabetes_score }}</td>
+                <td>{{ hospital.phone }}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#edit{{ hospital.id }}">Edit</button>
+                    <a class="btn btn-sm btn-danger" href="{{ url_for('admin_delete_hospital', hospital_id=hospital.id) }}">Delete</a>
+                </td>
+            </tr>
+            <tr class="collapse" id="edit{{ hospital.id }}">
+                <td colspan="6">
+                    <form method="POST" action="{{ url_for('admin_edit_hospital', hospital_id=hospital.id) }}">
+                        <div class="row g-2">
+                            <div class="col-md-3"><input class="form-control" name="name" value="{{ hospital.name }}" required /></div>
+                            <div class="col-md-3"><input class="form-control" name="address" value="{{ hospital.address }}" required /></div>
+                            <div class="col-md-2"><input class="form-control" name="specialty" value="{{ hospital.specialty }}" required /></div>
+                            <div class="col-md-2"><input class="form-control" name="phone" value="{{ hospital.phone }}" required /></div>
+                            <div class="col-md-2"><input class="form-control" name="city" value="{{ hospital.city or '' }}" placeholder="City" /></div>
+                            <div class="col-md-2"><input class="form-control" name="locality" value="{{ hospital.locality or '' }}" placeholder="Locality" /></div>
+                            <div class="col-md-2"><input class="form-control" name="heart_score" type="number" min="0" max="100" value="{{ hospital.heart_score or 60 }}" /></div>
+                            <div class="col-md-2"><input class="form-control" name="liver_score" type="number" min="0" max="100" value="{{ hospital.liver_score or 60 }}" /></div>
+                            <div class="col-md-2"><input class="form-control" name="diabetes_score" type="number" min="0" max="100" value="{{ hospital.diabetes_score or 60 }}" /></div>
+                            <div class="col-md-4"><input class="form-control" name="description" value="{{ hospital.description or '' }}" placeholder="Description" /></div>
+                            <div class="col-md-2"><button class="btn btn-primary w-100">Update</button></div>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="text-center py-4 text-muted">
+                    No hospitals found yet. Use "Add Hospital" to create the first listing.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

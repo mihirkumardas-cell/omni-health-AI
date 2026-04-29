@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row align-items-center admin-hero gy-4">
+    <div class="col-lg-6">
+        <div class="hero-section p-5">
+            <span class="eyebrow">Operations console</span>
+            <h1 class="page-title mb-3">Admin control with a cleaner, calmer command view.</h1>
+            <p class="page-subtitle mb-4">Manage hospitals, users, and feedback from a single control layer built around the new app theme.</p>
+            <div class="d-flex gap-3">
+                <a href="#admin-login-panel" class="btn btn-secondary btn-lg">Manage hospitals</a>
+                <a href="#admin-login-panel" class="btn btn-primary btn-lg">View users</a>
+            </div>
+            <div class="hero-metrics">
+                <a href="#admin-login-panel" class="hero-metric hero-metric-link">
+                    <strong>Hospitals</strong>
+                    <span>Editable recommendation data</span>
+                </a>
+                <a href="#admin-login-panel" class="hero-metric hero-metric-link">
+                    <strong>Users</strong>
+                    <span>Platform visibility</span>
+                </a>
+                <a href="#admin-login-panel" class="hero-metric hero-metric-link">
+                    <strong>Feedback</strong>
+                    <span>Experience monitoring</span>
+                </a>
+            </div>
+            <p class="text-white-50 small mt-3 mb-0">Sign in first to open the admin sections.</p>
+        </div>
+    </div>
+    <div class="col-lg-5 offset-lg-1">
+        <div class="card-soft auth-panel p-5 shadow-sm" id="admin-login-panel">
+            <h3 class="mb-4">Admin Login</h3>
+            <form method="POST" action="{{ url_for('admin_login') }}">
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control form-control-lg" name="username" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control form-control-lg" name="password" required />
+                </div>
+                <button class="btn btn-primary w-100 btn-lg">Admin Sign In</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
