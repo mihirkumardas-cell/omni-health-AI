@@ -248,9 +248,23 @@ def _ensure_hospital_columns():
 
 
 def seed_default_hospitals():
-    if Hospital.query.count() > 0:
+    existing_by_name = {
+        hospital.name.lower(): hospital
+        for hospital in Hospital.query.filter(Hospital.name.in_([item["name"] for item in DEFAULT_HOSPITALS])).all()
+    }
+    changed = False
+    for hospital_data in DEFAULT_HOSPITALS:
+        hospital = existing_by_name.get(hospital_data["name"].lower())
+        if hospital is None:
+            db.session.add(Hospital(**hospital_data))
+            changed = True
+            continue
+        for field, value in hospital_data.items():
+            if getattr(hospital, field) in (None, ""):
+                setattr(hospital, field, value)
+                changed = True
+    if not changed:
         return
-    db.session.add_all(Hospital(**hospital) for hospital in DEFAULT_HOSPITALS)
     db.session.commit()
 
 
