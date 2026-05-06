@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, url_for, flash, session
-from models import db, Admin, User, Hospital, Feedback, SymptomEntry
+from models import db, Admin, User, Hospital, Feedback, SymptomEntry, seed_default_hospitals
 from ml_models import predict_disease, predict_rnn
 import re
 
@@ -197,6 +197,7 @@ def compute_location_score(patient_location, hospital):
 
 
 def build_hospital_recommendations(disease, patient_location):
+    seed_default_hospitals()
     hospitals = Hospital.query.order_by(Hospital.name).all()
     disease_score_field = DISEASE_SCORE_FIELDS.get(disease, "heart_score")
     specialty = SPECIALTY_MAP.get(disease, "General").lower()
@@ -308,6 +309,7 @@ def init_routes(app):
     def admin_hospitals():
         if session.get("user_role") != "admin":
             return redirect(url_for("admin_login"))
+        seed_default_hospitals()
         hospitals = Hospital.query.order_by(Hospital.name).all()
         return render_template("admin_hospitals.html", hospitals=hospitals)
 
@@ -555,6 +557,7 @@ def init_routes(app):
     def user_hospitals():
         if session.get("user_role") != "user":
             return redirect(url_for("login"))
+        seed_default_hospitals()
         hospitals = Hospital.query.order_by(Hospital.name).all()
         return render_template("user_hospitals.html", hospitals=hospitals)
 
