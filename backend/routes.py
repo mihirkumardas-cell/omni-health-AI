@@ -1,5 +1,6 @@
 from flask import render_template, request, redirect, url_for, flash, session
-from models import db, Admin, User, Hospital, Feedback, SymptomEntry, seed_default_hospitals
+from types import SimpleNamespace
+from models import db, Admin, User, Hospital, Feedback, SymptomEntry, DEFAULT_HOSPITALS, seed_default_hospitals
 from ml_models import predict_disease, predict_rnn
 import re
 
@@ -118,6 +119,10 @@ MEDICINE_GUIDANCE = {
 }
 
 
+def fallback_hospitals():
+    return [SimpleNamespace(**hospital) for hospital in DEFAULT_HOSPITALS]
+
+
 def analyze_symptoms(symptoms_text):
     if not symptoms_text:
         return None, 0
@@ -199,6 +204,8 @@ def compute_location_score(patient_location, hospital):
 def build_hospital_recommendations(disease, patient_location):
     seed_default_hospitals()
     hospitals = Hospital.query.order_by(Hospital.name).all()
+    if not hospitals:
+        hospitals = fallback_hospitals()
     disease_score_field = DISEASE_SCORE_FIELDS.get(disease, "heart_score")
     specialty = SPECIALTY_MAP.get(disease, "General").lower()
     recommendations = []
@@ -559,6 +566,8 @@ def init_routes(app):
             return redirect(url_for("login"))
         seed_default_hospitals()
         hospitals = Hospital.query.order_by(Hospital.name).all()
+        if not hospitals:
+            hospitals = fallback_hospitals()
         return render_template("user_hospitals.html", hospitals=hospitals)
 
     @app.route("/user/feedback", methods=["GET", "POST"])
